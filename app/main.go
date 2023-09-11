@@ -21,8 +21,6 @@ import (
 func main() {
 	ctx := context.TODO()
 
-	timeNow := metav1.Now()
-	timeCheck := timeNow.Unix()
 	workStart := 10
 	workEnd := 20
 
@@ -58,6 +56,8 @@ func main() {
 	}
 
 	for {
+		timeNow := metav1.Now()
+		timeCheck := timeNow.Unix()
 		timeWork := timeNow.Hour()
 		if timeWork < workStart || timeWork >= workEnd {
 			for _, nameSpace := range nameSpaces {
@@ -171,6 +171,6 @@ func main() {
 		} else {
 			log.Println("Now is working time, pass changes")
 		}
-		time.Sleep(60 * time.Second)
+		time.Sleep(600 * time.Second)
 	}
 }
