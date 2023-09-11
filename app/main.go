@@ -74,9 +74,8 @@ func main() {
 							diffTime := timeCheck - creationTime
 							log.Printf("Difference in time is %d for deployment %s\n", diffTime, secret.GetLabels()["name"])
 							if diffTime >= seconds {
-								fmt.Println("Deployment is older than 24 hours and will be deleted")
+								log.Printf("Helm release %s is older than 24 hours and will be deleted\n", secret.GetLabels()["name"])
 								nameCommon := (secret.GetLabels())["name"]
-								fmt.Println(nameCommon)
 								objects := []string{"Deployments", "Secrets", "ConfigMaps", "Services", "Ingress"}
 								for _, objectItem := range objects {
 									switch objectItem {
