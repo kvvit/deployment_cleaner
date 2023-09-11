@@ -7,5 +7,8 @@ RUN go build -ldflags "-s -w" -o main .
 FROM debian:buster-slim
 WORKDIR /app
 COPY --from=builder /app/main .
+RUN useradd -m -s /bin/bash cleaner
+RUN chown -R cleaner:cleaner /app
+USER cleaner
 CMD ["./main"]
 
