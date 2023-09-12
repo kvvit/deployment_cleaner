@@ -19,7 +19,7 @@ import (
 )
 
 func main() {
-	ctx := context.TODO()
+	ctx := context.Background()
 
 	workStart := 10
 	workEnd := 20
@@ -55,7 +55,8 @@ func main() {
 		return
 	}
 
-	for {
+	ticker := time.NewTicker(10 * time.Minute)
+	for ; true; <-ticker.C {
 		timeNow := metav1.Now()
 		timeCheck := timeNow.Unix()
 		timeWork := timeNow.Hour()
@@ -170,6 +171,5 @@ func main() {
 		} else {
 			log.Println("Now is working time, pass changes")
 		}
-		time.Sleep(600 * time.Second)
 	}
 }
