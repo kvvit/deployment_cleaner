@@ -17,7 +17,7 @@ func main() {
 	workEnd := 20
 
 	//One day is 86400
-	var seconds int64 = 986400
+	var seconds int64 = 86400
 
 	varCheck := os.Getenv("NAMESPACES")
 	if len(varCheck) == 0 {
@@ -27,12 +27,14 @@ func main() {
 
 	clientset := getClientset()
 
-	ticker := time.NewTicker(1 * time.Minute)
+	ticker := time.NewTicker(10 * time.Minute)
 	for ; true; <-ticker.C {
 		timeNow := metav1.Now()
 		timeCheck := timeNow.Unix()
 		timeWork := timeNow.Hour()
-		if timeWork < workStart || timeWork >= workEnd {
+		if timeWork >= workStart && timeWork < workEnd {
+			log.Println("Now is working time, pass changes")
+		} else {
 			for _, nameSpace := range nameSpaces {
 				secrets, err := clientset.CoreV1().Secrets(nameSpace).List(ctx, metav1.ListOptions{})
 				if err != nil {
@@ -134,8 +136,6 @@ func main() {
 					}
 				}
 			}
-		} else {
-			log.Println("Now is working time, pass changes")
 		}
 	}
 }
