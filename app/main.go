@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -18,18 +17,17 @@ func main() {
 	workEnd := 20
 
 	//One day is 86400
-	var seconds int64 = 86400
+	var seconds int64 = 986400
 
 	varCheck := os.Getenv("NAMESPACES")
 	if len(varCheck) == 0 {
-		fmt.Println("Please set NAMESPACES env variable")
-		return
+		log.Fatalln("Please set NAMESPACES env variable")
 	}
 	nameSpaces := []string{os.Getenv("NAMESPACES")}
 
 	clientset := getClientset()
 
-	ticker := time.NewTicker(10 * time.Minute)
+	ticker := time.NewTicker(1 * time.Minute)
 	for ; true; <-ticker.C {
 		timeNow := metav1.Now()
 		timeCheck := timeNow.Unix()
@@ -38,8 +36,7 @@ func main() {
 			for _, nameSpace := range nameSpaces {
 				secrets, err := clientset.CoreV1().Secrets(nameSpace).List(ctx, metav1.ListOptions{})
 				if err != nil {
-					fmt.Printf("Error listing Secrets: %v\n", err)
-					return
+					log.Fatalf("Error listing Secrets: %v\n", err)
 				}
 				for _, secret := range secrets.Items {
 					if secret.Type == "helm.sh/release.v1" {
@@ -57,8 +54,7 @@ func main() {
 									case "Deployments":
 										deploymentList, err := clientset.AppsV1().Deployments(nameSpace).List(ctx, metav1.ListOptions{})
 										if err != nil {
-											fmt.Printf("Error listing Deployments: %v\n", err)
-											return
+											log.Fatalf("Error listing Deployments: %v\n", err)
 										}
 										matchingObjects := []string{}
 										for _, deployment := range deploymentList.Items {
@@ -74,8 +70,7 @@ func main() {
 									case "Secrets":
 										secretList, err := clientset.CoreV1().Secrets(nameSpace).List(ctx, metav1.ListOptions{})
 										if err != nil {
-											fmt.Printf("Error listing Secrets: %v\n", err)
-											return
+											log.Fatalf("Error listing Secrets: %v\n", err)
 										}
 										matchingObjects := []string{}
 										for _, secret := range secretList.Items {
@@ -90,8 +85,7 @@ func main() {
 									case "ConfigMaps":
 										configMapList, err := clientset.CoreV1().ConfigMaps(nameSpace).List(ctx, metav1.ListOptions{})
 										if err != nil {
-											fmt.Printf("Error listing ConfigMaps: %v\n", err)
-											return
+											log.Fatalf("Error listing ConfigMaps: %v\n", err)
 										}
 										matchingObjects := []string{}
 										for _, configMap := range configMapList.Items {
@@ -106,8 +100,7 @@ func main() {
 									case "Services":
 										serviceList, err := clientset.CoreV1().Services(nameSpace).List(ctx, metav1.ListOptions{})
 										if err != nil {
-											fmt.Printf("Error listing Services: %v\n", err)
-											return
+											log.Fatalf("Error listing Services: %v\n", err)
 										}
 										matchingObjects := []string{}
 										for _, service := range serviceList.Items {
@@ -122,8 +115,7 @@ func main() {
 									case "Ingress":
 										ingressList, err := clientset.NetworkingV1().Ingresses(nameSpace).List(ctx, metav1.ListOptions{})
 										if err != nil {
-											fmt.Printf("Error listing Ingresses: %v\n", err)
-											return
+											log.Fatalf("Error listing Ingresses: %v\n", err)
 										}
 										matchingObjects := []string{}
 										for _, ingress := range ingressList.Items {
