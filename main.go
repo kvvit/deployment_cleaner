@@ -6,6 +6,9 @@ import (
 	"os"
 	"time"
 
+	clientset "pkg/clientset"
+	deleteobjects "pkg/deleteobjects"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -24,7 +27,7 @@ func main() {
 	}
 	nameSpace := os.Getenv("NAMESPACE")
 
-	clientset := GetClientset()
+	clientset := clientset.GetClientset()
 
 	ticker := time.NewTicker(10 * time.Minute)
 	for ; true; <-ticker.C {
@@ -33,7 +36,7 @@ func main() {
 		if timeWork >= workStart && timeWork < workEnd {
 			log.Println("Now is working time, pass changes")
 		} else {
-			DeleteOldHelmReleases(ctx, clientset, nameSpace, seconds)
+			deleteobjects.DeleteOldHelmReleases(ctx, clientset, nameSpace, seconds)
 		}
 	}
 }
