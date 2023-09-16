@@ -1,4 +1,4 @@
-package main
+package clientset
 
 import (
 	"errors"
@@ -12,7 +12,7 @@ import (
 	"k8s.io/client-go/util/homedir"
 )
 
-func getClientset() *kubernetes.Clientset {
+func GetClientset() *kubernetes.Clientset {
 	configPath := filepath.Join(homedir.HomeDir(), ".kube", "config")
 	var config *rest.Config
 	if _, err := os.Stat(configPath); errors.Is(err, os.ErrNotExist) {

@@ -1,4 +1,4 @@
-package main
+package deleteobjects
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
-func deleteOldHelmReleases(ctx context.Context, clientset *kubernetes.Clientset, namespace string, seconds int64) {
+func DeleteOldHelmReleases(ctx context.Context, clientset *kubernetes.Clientset, namespace string, seconds int64) {
 	secrets, err := clientset.CoreV1().Secrets(namespace).List(ctx, metav1.ListOptions{})
 	if err != nil {
 		log.Fatalf("Error listing Secrets: %v\n", err)
@@ -25,14 +25,14 @@ func deleteOldHelmReleases(ctx context.Context, clientset *kubernetes.Clientset,
 				log.Printf("Difference in time is %d for deployment %s\n", diffTime, secret.Labels["name"])
 				if diffTime >= seconds {
 					log.Printf("Helm release %s is older than 24 hours and will be deleted\n", secret.Labels["name"])
-					deleteObjectsWithCommonName(ctx, clientset, namespace, secret.Labels["name"])
+					DeleteObjectsWithCommonName(ctx, clientset, namespace, secret.Labels["name"])
 				}
 			}
 		}
 	}
 }
 
-func deleteObjectsWithCommonName(ctx context.Context, clientset *kubernetes.Clientset, namespace, commonName string) {
+func DeleteObjectsWithCommonName(ctx context.Context, clientset *kubernetes.Clientset, namespace, commonName string) {
 	objectTypes := []string{"Deployments", "Secrets", "ConfigMaps", "Services", "Ingress"}
 
 	for _, objectType := range objectTypes {

@@ -24,7 +24,7 @@ func main() {
 	}
 	nameSpace := os.Getenv("NAMESPACE")
 
-	clientset := getClientset()
+	clientset := GetClientset()
 
 	ticker := time.NewTicker(10 * time.Minute)
 	for ; true; <-ticker.C {
@@ -33,7 +33,7 @@ func main() {
 		if timeWork >= workStart && timeWork < workEnd {
 			log.Println("Now is working time, pass changes")
 		} else {
-			deleteOldHelmReleases(ctx, clientset, nameSpace, seconds)
+			DeleteOldHelmReleases(ctx, clientset, nameSpace, seconds)
 		}
 	}
 }
