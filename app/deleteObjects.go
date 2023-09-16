@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -23,9 +22,9 @@ func deleteOldHelmReleases(ctx context.Context, clientset *kubernetes.Clientset,
 			if version == "1" {
 				creationTime := secret.CreationTimestamp.Unix()
 				diffTime := time.Now().Unix() - creationTime
-				fmt.Printf("Difference in time is %d for deployment %s\n", diffTime, secret.Labels["name"])
+				log.Printf("Difference in time is %d for deployment %s\n", diffTime, secret.Labels["name"])
 				if diffTime >= seconds {
-					fmt.Printf("Helm release %s is older than 24 hours and will be deleted\n", secret.Labels["name"])
+					log.Printf("Helm release %s is older than 24 hours and will be deleted\n", secret.Labels["name"])
 					deleteObjectsWithCommonName(ctx, clientset, namespace, secret.Labels["name"])
 				}
 			}
