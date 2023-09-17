@@ -1,9 +1,8 @@
 module deployment_cleaner
 
-go 1.20
+go 1.21.1
 
 require (
-	github.com/kvvit/deployment_cleaner v0.0.0-20230917073707-5763e9ba4f74
 	k8s.io/apimachinery v0.28.2
 	k8s.io/client-go v0.28.2
 )

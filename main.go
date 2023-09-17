@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/kvvit/deployment_cleaner/pkg/clientset"
-	"github.com/kvvit/deployment_cleaner/pkg/deleteobjects"
+	"deployment_cleaner/pkg/clientset"
+	"deployment_cleaner/pkg/deleteobjects"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
