@@ -10,25 +10,21 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
-func DeleteOldHelmReleases(ctx context.Context, clientset *kubernetes.Clientset, namespace string, seconds int64) {
+func DeleteOldHelmReleases(ctx context.Context, clientset *kubernetes.Clientset, namespace string, timeToDelete int64) {
 	secrets, err := clientset.CoreV1().Secrets(namespace).List(ctx, metav1.ListOptions{})
 	if err != nil {
 		log.Fatalf("Error listing Secrets: %v\n", err)
 	}
 
 	for _, secret := range secrets.Items {
-		if secret.Type == "helm.sh/release.v1" {
-			version := secret.Labels["version"]
-			if version == "1" {
-				creationTime := secret.CreationTimestamp.Unix()
-				diffTime := time.Now().Unix() - creationTime
-				log.Printf("Difference in time is %d for deployment %s\n", diffTime, secret.Labels["name"])
-				if diffTime >= seconds {
-					log.Printf("Helm release %s is older than 24 hours and will be deleted\n", secret.Labels["name"])
-					DeleteObjectsWithCommonName(ctx, clientset, namespace, secret.Labels["name"])
-				}
-			}
+		if secret.Type != "helm.sh/release.v1" || secret.Labels["version"] != "1" {
+			continue
 		}
+		if int64(time.Now().Sub(secret.CreationTimestamp.Time).Seconds()) < timeToDelete {
+			continue
+		}
+		log.Printf("Helm release %s is older than 24 hours and will be deleted\n", secret.Labels["name"])
+		DeleteObjectsWithCommonName(ctx, clientset, namespace, secret.Labels["name"])
 	}
 }
 

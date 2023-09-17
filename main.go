@@ -19,7 +19,7 @@ func main() {
 	workEnd := 18
 
 	//One day is 86400
-	var seconds int64 = 86400
+	var timeToDelete int64 = 86400
 
 	varCheck := os.Getenv("NAMESPACE")
 	if len(varCheck) == 0 {
@@ -36,7 +36,7 @@ func main() {
 		if timeWork >= workStart && timeWork < workEnd {
 			log.Println("Now is working time, pass changes")
 		} else {
-			deleteobjects.DeleteOldHelmReleases(ctx, clientset, nameSpace, seconds)
+			deleteobjects.DeleteOldHelmReleases(ctx, clientset, nameSpace, timeToDelete)
 		}
 	}
 }
