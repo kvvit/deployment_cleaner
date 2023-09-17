@@ -1,7 +1,7 @@
 FROM golang:1.21.1 as builder
 WORKDIR /app
 COPY ./main.go ./go.mod ./go.sum /app/
-COPY ./pkg /usr/local/go/src/dedeployment_cleaner/
+COPY ./pkg /app/pkg
 RUN go mod download
 RUN go build -ldflags "-s -w" -o main .
 
