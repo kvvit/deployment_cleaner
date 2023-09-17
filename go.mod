@@ -1,4 +1,4 @@
-module deployment_cleaner
+module github.com/kvvit/deployment_cleaner
 
 go 1.21.1
 
