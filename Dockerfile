@@ -1,6 +1,7 @@
 FROM golang:1.20.5-buster as builder
 WORKDIR /app
-COPY app/. .
+COPY ./main.go ./go.mod ./go.sum /app/
+COPY ./pkg/ /app/
 RUN go mod download
 RUN go build -ldflags "-s -w" -o main .
 
