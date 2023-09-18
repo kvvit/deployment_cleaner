@@ -13,7 +13,7 @@ type EnvVars struct {
 	timeToDelete int64
 }
 
-func loadVars() EnvVars {
+func LoadVars() EnvVars {
 	var envvars EnvVars
 
 	workStartStr := os.Getenv("WORK_START")
