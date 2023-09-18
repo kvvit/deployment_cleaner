@@ -2,21 +2,26 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"time"
 
 	"github.com/kvvit/deployment_cleaner/pkg/clientset"
 	"github.com/kvvit/deployment_cleaner/pkg/deleteobjects"
+	"github.com/kvvit/deployment_cleaner/pkg/loadvars"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func main() {
 	ctx := context.Background()
+	envvars := loadvars.LoadVars()
+
+	fmt.Println(envvars.nameSpace)
 
 	workStart := 10
-	workEnd := 18
+	workEnd := 19
 
 	//One day is 86400
 	var timeToDelete int64 = 86400
