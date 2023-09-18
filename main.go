@@ -18,7 +18,7 @@ func main() {
 	ctx := context.Background()
 	envvars := loadvars.LoadVars()
 
-	fmt.Println(envvars.nameSpace)
+	fmt.Println(envvars)
 
 	workStart := 10
 	workEnd := 19

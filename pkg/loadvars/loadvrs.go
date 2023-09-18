@@ -13,7 +13,7 @@ type EnvVars struct {
 	timeToDelete int64
 }
 
-func LoadVars() *EnvVars {
+func LoadVars() EnvVars {
 	var envvars EnvVars
 
 	workStartStr := os.Getenv("WORK_START")
@@ -38,5 +38,5 @@ func LoadVars() *EnvVars {
 		log.Fatal("Environment variable TIME_TO_DELETE not set: ", err)
 	}
 	envvars.timeToDelete = timeToDelete
-	return &envvars
+	return envvars
 }
