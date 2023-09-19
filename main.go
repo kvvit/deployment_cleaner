@@ -15,7 +15,6 @@ import (
 func main() {
 	ctx := context.Background()
 	envvars := loadvars.LoadVars()
-
 	clientset := clientset.GetClientset()
 
 	ticker := time.NewTicker(10 * time.Minute)
