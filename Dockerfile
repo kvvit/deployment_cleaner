@@ -5,7 +5,7 @@ COPY ./pkg /app/pkg
 RUN go mod download
 RUN go build -ldflags "-s -w" -o main .
 
-FROM debian:bullseye-slim
+FROM ubuntu:22.04
 WORKDIR /app
 COPY --from=builder /app/main .
 RUN useradd -m -s /bin/bash cleaner
