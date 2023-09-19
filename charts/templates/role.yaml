@@ -9,6 +9,9 @@ rules:
   resources: ["deployments"]
   verbs: ["get", "list", "watch", "delete"]
 - apiGroups: [""]
-  resources: ["secrets", "configmaps", "services", "ingresses"]
+  resources: ["secrets", "configmaps", "services"]
+  verbs: ["get", "list", "watch", "delete"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingresses"]
   verbs: ["get", "list", "watch", "delete"]
 {{- end -}}
