@@ -7,10 +7,10 @@ import (
 )
 
 type EnvVars struct {
-	workStart    int
-	workEnd      int
-	nameSpace    string
-	timeToDelete int64
+	WorkStart    int
+	WorkEnd      int
+	NameSpace    string
+	TimeToDelete int64
 }
 
 func LoadVars() EnvVars {
@@ -21,22 +21,22 @@ func LoadVars() EnvVars {
 	if err != nil {
 		log.Fatal("Environment variable WORK_START not set: ", err)
 	}
-	envvars.workStart = workStart
+	envvars.WorkStart = workStart
 
 	workEndStr := os.Getenv("WORK_END")
 	workEnd, err := strconv.Atoi(workEndStr)
 	if err != nil {
 		log.Fatal("Environment variable WORK_END not set: ", err)
 	}
-	envvars.workEnd = workEnd
+	envvars.WorkEnd = workEnd
 
-	envvars.nameSpace = os.Getenv("NAMESPACE")
+	envvars.NameSpace = os.Getenv("NAMESPACE")
 
 	timeToDeleteStr := os.Getenv("TIME_TO_DELETE")
 	timeToDelete, err := strconv.ParseInt(timeToDeleteStr, 10, 64)
 	if err != nil {
 		log.Fatal("Environment variable TIME_TO_DELETE not set: ", err)
 	}
-	envvars.timeToDelete = timeToDelete
+	envvars.TimeToDelete = timeToDelete
 	return envvars
 }
