@@ -13,41 +13,30 @@ type EnvVars struct {
 	TimeToDelete int64
 }
 
-func (e *EnvVars) LoadVars() *EnvVars {
-	WSS := os.Getenv("WORK_START")
-	WS, err := strconv.Atoi(WSS)
+func LoadVars() EnvVars {
+	var envvars EnvVars
+
+	workStartStr := os.Getenv("WORK_START")
+	workStart, err := strconv.Atoi(workStartStr)
 	if err != nil {
-		log.Println("Environment variable WORK_START not set, use default value: 9")
-		WS = 9
+		log.Fatal("Environment variable WORK_START not set: ", err)
 	}
-	e.WorkStart = WS
+	envvars.WorkStart = workStart
 
-	WES := os.Getenv("WORK_END")
-	WE, err := strconv.Atoi(WES)
+	workEndStr := os.Getenv("WORK_END")
+	workEnd, err := strconv.Atoi(workEndStr)
 	if err != nil {
-		log.Println("Environment variable WORK_END not set, use default value: 18")
-		WE = 18
+		log.Fatal("Environment variable WORK_END not set: ", err)
 	}
-	e.WorkEnd = WE
+	envvars.WorkEnd = workEnd
 
-	e.NameSpace = os.Getenv("NAMESPACE")
-	if e.NameSpace == "" {
-		log.Println("Environment variable NAMESPACE not set, use default value: default")
-		e.NameSpace = "default"
-	}
+	envvars.NameSpace = os.Getenv("NAMESPACE")
 
-	TTDS := os.Getenv("TIME_TO_DELETE")
-	TTD, err := strconv.ParseInt(TTDS, 10, 64)
+	timeToDeleteStr := os.Getenv("TIME_TO_DELETE")
+	timeToDelete, err := strconv.ParseInt(timeToDeleteStr, 10, 64)
 	if err != nil {
-		log.Println("Environment variable TIME_TO_DELETE not set, use default value: 86400")
-		TTD = 86400
+		log.Fatal("Environment variable TIME_TO_DELETE not set: ", err)
 	}
-	e.TimeToDelete = TTD
-
-	return &EnvVars{
-		WorkStart:    e.WorkStart,
-		WorkEnd:      e.WorkEnd,
-		NameSpace:    e.NameSpace,
-		TimeToDelete: e.TimeToDelete,
-	}
+	envvars.TimeToDelete = timeToDelete
+	return envvars
 }
