@@ -5,7 +5,7 @@ COPY ./pkg /app/pkg
 RUN go mod download
 RUN go build -ldflags "-s -w" -o main .
 
-FROM ubuntu:22.04
+FROM debian:bookworm-slim
 WORKDIR /app
 COPY --from=builder /app/main .
 RUN useradd -m -s /bin/bash cleaner
