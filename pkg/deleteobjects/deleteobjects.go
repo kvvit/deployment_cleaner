@@ -17,7 +17,10 @@ func DeleteOldHelmReleases(ctx context.Context, clientset *kubernetes.Clientset,
 	}
 
 	for _, secret := range secrets.Items {
-		if secret.Type != "helm.sh/release.v1" || secret.Labels["version"] != "1" || secret.Labels["name"] != deploymentName {
+		if secret.Labels["name"] == deploymentName {
+			continue
+		}
+		if secret.Type != "helm.sh/release.v1" || secret.Labels["version"] != "1" {
 			continue
 		}
 		if int64(time.Now().Sub(secret.CreationTimestamp.Time).Seconds()) < timeToDelete {
