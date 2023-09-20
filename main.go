@@ -7,14 +7,13 @@ import (
 
 	"github.com/kvvit/deployment_cleaner/pkg/clientset"
 	"github.com/kvvit/deployment_cleaner/pkg/deleteobjects"
-	"github.com/kvvit/deployment_cleaner/pkg/loadvars"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func main() {
 	ctx := context.Background()
-	envvars := loadvars.LoadVars()
+	envvars := loadvars.envvars.LoadVars()
 	clientset := clientset.GetClientset()
 
 	ticker := time.NewTicker(10 * time.Minute)
