@@ -10,14 +10,14 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
-func DeleteOldHelmReleases(ctx context.Context, clientset *kubernetes.Clientset, namespace string, timeToDelete int64) {
+func DeleteOldHelmReleases(ctx context.Context, clientset *kubernetes.Clientset, namespace string, timeToDelete int64, deploymentName string) {
 	secrets, err := clientset.CoreV1().Secrets(namespace).List(ctx, metav1.ListOptions{})
 	if err != nil {
 		log.Fatalf("Error listing Secrets: %v\n", err)
 	}
 
 	for _, secret := range secrets.Items {
-		if secret.Type != "helm.sh/release.v1" || secret.Labels["version"] != "1" {
+		if secret.Type != "helm.sh/release.v1" || secret.Labels["version"] != "1" || secret.Labels["name"] != deploymentName {
 			continue
 		}
 		if int64(time.Now().Sub(secret.CreationTimestamp.Time).Seconds()) < timeToDelete {

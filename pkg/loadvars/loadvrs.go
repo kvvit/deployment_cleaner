@@ -7,10 +7,11 @@ import (
 )
 
 type EnvVars struct {
-	WorkStart    int
-	WorkEnd      int
-	NameSpace    string
-	TimeToDelete int64
+	WorkStart      int
+	WorkEnd        int
+	NameSpace      string
+	TimeToDelete   int64
+	DeploymentName string
 }
 
 func LoadVars() EnvVars {
@@ -31,6 +32,8 @@ func LoadVars() EnvVars {
 	envvars.WorkEnd = workEnd
 
 	envvars.NameSpace = os.Getenv("NAMESPACE")
+
+	envvars.DeploymentName = os.Getenv("DEPLOYMENT_NAME")
 
 	timeToDeleteStr := os.Getenv("TIME_TO_DELETE")
 	timeToDelete, err := strconv.ParseInt(timeToDeleteStr, 10, 64)

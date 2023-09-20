@@ -24,7 +24,7 @@ func main() {
 		if timeWork >= envvars.WorkStart && timeWork < envvars.WorkEnd {
 			log.Println("Now is working time, pass changes")
 		} else {
-			deleteobjects.DeleteOldHelmReleases(ctx, clientset, envvars.NameSpace, envvars.TimeToDelete)
+			deleteobjects.DeleteOldHelmReleases(ctx, clientset, envvars.NameSpace, envvars.TimeToDelete, envvars.DeploymentName)
 		}
 	}
 }
