@@ -45,7 +45,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         {{- if .Values.livenessProbe.enabled }}
-          livenessProbe:
+        livenessProbe:
           exec:
             command:
             - /bin/sh
