@@ -26,21 +26,15 @@ serviceAccount:
 podAnnotations: {}
 
 livenessProbe:
-  enabled: false
+  exec:
+    command:
+      - ls
+      - /app/main
   initialDelaySeconds: 5
-  periodSeconds: 30
+  periodSeconds: 10
   timeoutSeconds: 1
   failureThreshold: 3
   successThreshold: 1
-
-readinessProbe:
-  enabled: false
-  initialDelaySeconds: 5
-  periodSeconds: 30
-  timeoutSeconds: 1
-  failureThreshold: 3
-  successThreshold: 1
-
 
 podSecurityContext: {}
   # fsGroup: 2000
