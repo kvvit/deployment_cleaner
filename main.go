@@ -16,6 +16,7 @@ func main() {
 	ctx := context.Background()
 	envvars := loadvars.LoadVars()
 	clientset := clientset.GetClientset()
+	log.Println("Cleaning service has been started")
 
 	ticker := time.NewTicker(10 * time.Minute)
 	for ; true; <-ticker.C {
