@@ -75,7 +75,6 @@ autoscaling:
 configmap:
   WORK_START: 10
   WORK_END: 19
-  NAMESPACE: default
   TIME_TO_DELETE: 86400
 
 nodeSelector: {}

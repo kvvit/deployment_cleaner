@@ -39,6 +39,8 @@ spec:
           env:
             - name: DEPLOYMENT_NAME
               value: {{ .Release.Name }}
+            - name: NAMESPACE
+              value: {{ .Release.Namespace }}
           envFrom:
             - configMapRef:
                 name: {{ .Release.Name }}
