@@ -1,3 +1,7 @@
+/*
+This module cheks environment variables, stop application if they aren't set, and load them in the stucture
+with appropiate type. This variable is used in the main function.
+*/
 package loadvars
 
 import (
@@ -32,8 +36,14 @@ func LoadVars() EnvVars {
 	envvars.WorkEnd = workEnd
 
 	envvars.NameSpace = os.Getenv("NAMESPACE")
+	if envvars.NameSpace == "" {
+		log.Fatal("Environment variable NAMESPACE not set")
+	}
 
 	envvars.DeploymentName = os.Getenv("DEPLOYMENT_NAME")
+	if envvars.DeploymentName == "" {
+		log.Fatal("Environment variable DEPLOYMENT_NAME not set")
+	}
 
 	timeToDeleteStr := os.Getenv("TIME_TO_DELETE")
 	timeToDelete, err := strconv.ParseInt(timeToDeleteStr, 10, 64)

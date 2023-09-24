@@ -1,4 +1,5 @@
 FROM golang:1.21.1 as builder
+LABEL maintainer="Valentin Khramtsov" email="khramtsov.valentin@gmail.com"
 WORKDIR /app
 COPY ./main.go ./go.mod ./go.sum /app/
 COPY ./pkg /app/pkg

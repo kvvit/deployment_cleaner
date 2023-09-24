@@ -1,3 +1,6 @@
+/*
+This module creates a clientset for kubernetes.
+*/
 package clientset
 
 import (

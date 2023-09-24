@@ -1,3 +1,6 @@
+/*
+This module checks helm secret for deployments that are older than 24 hours, and deletes them.
+*/
 package deleteobjects
 
 import (
