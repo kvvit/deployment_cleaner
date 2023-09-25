@@ -13,7 +13,13 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
-func DeleteOldHelmReleases(ctx context.Context, clientset *kubernetes.Clientset, namespace string, timeToDelete int64, deploymentName string) {
+func DeleteOldHelmReleases(
+	ctx context.Context,
+	clientset *kubernetes.Clientset,
+	timeToDelete int64,
+	deploymentName,
+	namespace string,
+	IsDryRun bool) {
 	secrets, err := clientset.CoreV1().Secrets(namespace).List(ctx, metav1.ListOptions{})
 	if err != nil {
 		log.Fatalf("Error listing Secrets: %v\n", err)
@@ -30,11 +36,16 @@ func DeleteOldHelmReleases(ctx context.Context, clientset *kubernetes.Clientset,
 			continue
 		}
 		log.Printf("Helm release %s is older than 24 hours and will be deleted\n", secret.Labels["name"])
-		DeleteObjectsWithCommonName(ctx, clientset, namespace, secret.Labels["name"])
+		DeleteObjectsWithCommonName(ctx, clientset, namespace, secret.Labels["name"], IsDryRun)
 	}
 }
 
-func DeleteObjectsWithCommonName(ctx context.Context, clientset *kubernetes.Clientset, namespace, commonName string) {
+func DeleteObjectsWithCommonName(
+	ctx context.Context,
+	clientset *kubernetes.Clientset,
+	namespace,
+	commonName string,
+	IsDryRun bool) {
 	objectTypes := []string{"Deployments", "Secrets", "ConfigMaps", "Services", "Ingress"}
 
 	for _, objectType := range objectTypes {
@@ -52,7 +63,10 @@ func DeleteObjectsWithCommonName(ctx context.Context, clientset *kubernetes.Clie
 			}
 
 			for _, objectName := range matchingObjects {
-				//clientset.AppsV1().Deployments(namespace).Delete(ctx, objectName, metav1.DeleteOptions{})
+				if IsDryRun {
+					continue
+				}
+				clientset.AppsV1().Deployments(namespace).Delete(ctx, objectName, metav1.DeleteOptions{})
 				log.Printf("Deployment name: %s in namespace: %s has been deleted\n", objectName, namespace)
 			}
 		case "Secrets":
@@ -67,7 +81,10 @@ func DeleteObjectsWithCommonName(ctx context.Context, clientset *kubernetes.Clie
 				}
 			}
 			for _, objectName := range matchingObjects {
-				//clientset.CoreV1().Secrets(namespace).Delete(ctx, objectName, metav1.DeleteOptions{})
+				if IsDryRun {
+					continue
+				}
+				clientset.CoreV1().Secrets(namespace).Delete(ctx, objectName, metav1.DeleteOptions{})
 				log.Printf("Secret name: %s in namespace: %s has been deleted\n", objectName, namespace)
 			}
 		case "ConfigMaps":
@@ -82,7 +99,10 @@ func DeleteObjectsWithCommonName(ctx context.Context, clientset *kubernetes.Clie
 				}
 			}
 			for _, objectName := range matchingObjects {
-				//clientset.CoreV1().ConfigMaps(namespace).Delete(ctx, objectName, metav1.DeleteOptions{})
+				if IsDryRun {
+					continue
+				}
+				clientset.CoreV1().ConfigMaps(namespace).Delete(ctx, objectName, metav1.DeleteOptions{})
 				log.Printf("ConfigMap name: %s in namespace: %s has been deleted\n", objectName, namespace)
 			}
 		case "Services":
@@ -97,7 +117,10 @@ func DeleteObjectsWithCommonName(ctx context.Context, clientset *kubernetes.Clie
 				}
 			}
 			for _, objectName := range matchingObjects {
-				//clientset.CoreV1().Services(namespace).Delete(ctx, objectName, metav1.DeleteOptions{})
+				if IsDryRun {
+					continue
+				}
+				clientset.CoreV1().Services(namespace).Delete(ctx, objectName, metav1.DeleteOptions{})
 				log.Printf("Service name: %s in namespace: %s has been deleted\n", objectName, namespace)
 			}
 		case "Ingress":
@@ -112,7 +135,10 @@ func DeleteObjectsWithCommonName(ctx context.Context, clientset *kubernetes.Clie
 				}
 			}
 			for _, objectName := range matchingObjects {
-				//clientset.NetworkingV1().Ingresses(namespace).Delete(ctx, objectName, metav1.DeleteOptions{})
+				if IsDryRun {
+					continue
+				}
+				clientset.NetworkingV1().Ingresses(namespace).Delete(ctx, objectName, metav1.DeleteOptions{})
 				log.Printf("Ingress name: %s in namespace: %s has been deleted\n", objectName, namespace)
 			}
 		}

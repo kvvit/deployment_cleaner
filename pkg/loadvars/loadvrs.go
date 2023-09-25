@@ -16,6 +16,7 @@ type EnvVars struct {
 	NameSpace      string
 	TimeToDelete   int64
 	DeploymentName string
+	IsDryRun       bool
 }
 
 func LoadVars() EnvVars {
@@ -51,5 +52,12 @@ func LoadVars() EnvVars {
 		log.Fatal("Environment variable TIME_TO_DELETE not set: ", err)
 	}
 	envvars.TimeToDelete = timeToDelete
+
+	isDryRunStr := os.Getenv("DRY_RUN")
+	isDryRun, err := strconv.ParseBool(isDryRunStr)
+	if err != nil {
+		log.Fatal("Environment variable DRY_RUN not set: ", err)
+	}
+	envvars.IsDryRun = isDryRun
 	return envvars
 }

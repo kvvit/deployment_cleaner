@@ -67,9 +67,14 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 configmap:
+  # When workday is started
   WORK_START: 10
+  # When workday is ended
   WORK_END: 19
+  # When to delete the deployment (here is 24 hours)
   TIME_TO_DELETE: 86400
+  # Is dry run
+  DRY_RUN: true
 
 nodeSelector: {}
 
