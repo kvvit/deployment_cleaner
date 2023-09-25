@@ -2,5 +2,5 @@ apiVersion: v2
 name: deployments-cleaner
 description: A Helm chart for delete old deployments from Kubernetes namespace
 type: application
-version: 0.0.1
-appVersion: "0.0.1"
+version: 0.0.3
+appVersion: "0.0.3"
