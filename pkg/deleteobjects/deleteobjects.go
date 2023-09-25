@@ -36,6 +36,9 @@ func DeleteOldHelmReleases(
 			continue
 		}
 		log.Printf("Helm release %s is older than 24 hours and will be deleted\n", secret.Labels["name"])
+		if IsDryRun {
+			log.Printf("The variable IsDryRun is set to %t, skipping deletion of %s\n", IsDryRun, secret.Labels["name"])
+		}
 		DeleteObjectsWithCommonName(ctx, clientset, namespace, secret.Labels["name"], IsDryRun)
 	}
 }
