@@ -10,8 +10,8 @@ my learning purposes of Go programming.
 
 This application can be used in the development kubernetes cluster, to
 automatically delete outdated deployments in particular namespace.
-In current version I commented the parts of the code that related to
-deleting actions. This parts located in the module `pkg/deleteobjects`.
+This is next version in which you can use environment variable DRY_RUN,
+to skip deleting actions if it set to true.
 
 ## Installation
 
