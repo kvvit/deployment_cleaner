@@ -10,8 +10,8 @@ my learning purposes of Go programming.
 
 This application can be used in the development kubernetes cluster, to
 automatically delete outdated deployments in particular namespace.
-This is next version in which you can use environment variable DRY_RUN,
-to skip deleting actions if it set to true.
+This is next version in which you can use environment variable `DRY_RUN`,
+to skip deleting actions if it set to `true`.
 
 ## Installation
 
