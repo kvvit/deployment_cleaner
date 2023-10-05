@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -36,6 +37,9 @@ func main() {
 	prometheus.MustRegister(deploymentMetrics)
 	go func() {
 		http.Handle("/metrics", promhttp.Handler())
+		http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+			fmt.Fprintf(w, "ok")
+		})
 		log.Println("Web server start listening on", port)
 		err := http.ListenAndServe(":"+port, nil)
 		if err != nil {
