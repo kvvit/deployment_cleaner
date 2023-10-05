@@ -3,11 +3,16 @@ package metrics
 import (
 	"context"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+)
+
+var (
+	mutex = sync.Mutex{}
 )
 
 func FetchAndUpdateDeploymentMetrics(
@@ -20,6 +25,9 @@ func FetchAndUpdateDeploymentMetrics(
 		log.Println("Error fetching secrets:", err)
 		return
 	}
+
+	mutex.Lock()
+	defer mutex.Unlock()
 
 	for _, secret := range secrets.Items {
 		if secret.Type != "helm.sh/release.v1" || secret.Labels["version"] != "1" {

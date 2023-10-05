@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"sync"
 	"time"
 
 	"github.com/kvvit/deployment_cleaner/pkg/clientset"
@@ -13,7 +12,6 @@ import (
 	"github.com/kvvit/deployment_cleaner/pkg/metrics"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"k8s.io/apimachinery/pkg/util/wait"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -32,31 +30,33 @@ func main() {
 	ctx := context.Background()
 	envvars := loadvars.LoadVars()
 	clientset := clientset.GetClientset()
-	var wg sync.WaitGroup
+	port := "8080"
 	log.Println("Cleaning service has been started")
 
 	prometheus.MustRegister(deploymentMetrics)
+	go func() {
+		http.Handle("/metrics", promhttp.Handler())
+		log.Println("Web server start listening on", port)
+		err := http.ListenAndServe(":"+port, nil)
+		if err != nil {
+			log.Fatal("Error starting HTTP server:", err)
+		}
+	}()
 
 	ticker := time.NewTicker(1 * time.Minute)
-	for ; true; <-ticker.C {
-		wg.Add(6)
-		timeNow := metav1.Now()
-		timeWork := timeNow.Hour()
-		go wait.Forever(func() {
+	defer ticker.Stop()
+	timeNow := metav1.Now()
+	timeWork := timeNow.Hour()
+
+	for {
+		select {
+		case <-ticker.C:
 			metrics.FetchAndUpdateDeploymentMetrics(ctx, clientset, envvars.NameSpace, deploymentMetrics)
-			wg.Done()
-		}, 30*time.Second)
-		port := "8080"
-		if timeWork >= envvars.WorkStart && timeWork < envvars.WorkEnd {
-			log.Println("Now is working time, pass changes")
-		} else {
-			go deleteobjects.DeleteOldHelmReleases(ctx, clientset, envvars.TimeToDelete, envvars.DeploymentName, envvars.NameSpace, envvars.IsDryRun)
-			wg.Done()
+			if timeWork >= envvars.WorkStart && timeWork < envvars.WorkEnd {
+				log.Println("Now is working time, pass changes")
+			} else {
+				deleteobjects.DeleteOldHelmReleases(ctx, clientset, envvars.TimeToDelete, envvars.DeploymentName, envvars.NameSpace, envvars.IsDryRun)
+			}
 		}
-		http.Handle("/metrics", promhttp.Handler())
-		log.Println("listening on", port)
-		go log.Fatal(http.ListenAndServe(":"+port, nil))
-		wg.Done()
 	}
-	wg.Wait()
 }
