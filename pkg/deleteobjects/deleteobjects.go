@@ -7,10 +7,15 @@ import (
 	"context"
 	"log"
 	"strings"
+	"sync"
 	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+)
+
+var (
+	mutex = sync.Mutex{}
 )
 
 func DeleteOldHelmReleases(
@@ -24,6 +29,9 @@ func DeleteOldHelmReleases(
 	if err != nil {
 		log.Fatalf("Error listing Secrets: %v\n", err)
 	}
+
+	mutex.Lock()
+	defer mutex.Unlock()
 
 	for _, secret := range secrets.Items {
 		if secret.Labels["name"] == deploymentName {
